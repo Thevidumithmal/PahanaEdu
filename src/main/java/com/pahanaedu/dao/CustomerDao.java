@@ -29,16 +29,18 @@ public class CustomerDao {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
         while (rs.next()) {
-            Customer c = new Customer();
-            c.setAccountNumber(rs.getInt("accountNumber"));
-            c.setName(rs.getString("name"));
-            c.setAddress(rs.getString("address"));
-            c.setPhoneNumber(rs.getString("phoneNumber"));
-            c.setUnitsConsumed(rs.getInt("unitsConsumed"));
+            Customer c = new Customer.Builder()
+                    .setAccountNumber(rs.getInt("accountNumber"))
+                    .setName(rs.getString("name"))
+                    .setAddress(rs.getString("address"))
+                    .setPhoneNumber(rs.getString("phoneNumber"))
+                    .setUnitsConsumed(rs.getInt("unitsConsumed"))
+                    .build();
             list.add(c);
         }
         return list;
     }
+
 
     public Customer getCustomerByAccountNumber(int accountNumber) throws SQLException {
         String sql = "SELECT * FROM customers WHERE accountNumber = ?";
@@ -46,16 +48,17 @@ public class CustomerDao {
         stmt.setInt(1, accountNumber);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
-            Customer c = new Customer();
-            c.setAccountNumber(rs.getInt("accountNumber"));
-            c.setName(rs.getString("name"));
-            c.setAddress(rs.getString("address"));
-            c.setPhoneNumber(rs.getString("phoneNumber"));
-            c.setUnitsConsumed(rs.getInt("unitsConsumed"));
-            return c;
+            return new Customer.Builder()
+                    .setAccountNumber(rs.getInt("accountNumber"))
+                    .setName(rs.getString("name"))
+                    .setAddress(rs.getString("address"))
+                    .setPhoneNumber(rs.getString("phoneNumber"))
+                    .setUnitsConsumed(rs.getInt("unitsConsumed"))
+                    .build();
         }
         return null;
     }
+
 
     public boolean updateCustomer(Customer customer) throws SQLException {
         String sql = "UPDATE customers SET name = ?, address = ?, phoneNumber = ?, unitsConsumed = ? WHERE accountNumber = ?";

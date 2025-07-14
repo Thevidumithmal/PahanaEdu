@@ -12,14 +12,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
 
-
 @WebServlet("/customers")
 public class CustomerController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        try (Connection conn = DBUtil.getConnection()) {
+
+        try (Connection conn = DBUtil.getInstance().getConnection()) {
             CustomerService service = new CustomerService(conn);
 
             if ("add".equals(action)) {
@@ -34,13 +34,14 @@ public class CustomerController extends HttpServlet {
                 service.deleteCustomer(accNum);
                 resp.sendRedirect("customers");
             } else {
-                // default list all customers
+                // Default: List all customers
                 List<Customer> customers = service.getAllCustomers();
                 req.setAttribute("customers", customers);
                 req.getRequestDispatcher("jsp/viewCustomers.jsp").forward(req, resp);
             }
+
         } catch (Exception e) {
-            throw new ServletException(e);
+            throw new ServletException("Error handling GET request", e);
         }
     }
 
@@ -48,34 +49,27 @@ public class CustomerController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
 
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getInstance().getConnection()) {
             CustomerService service = new CustomerService(conn);
 
+            Customer c = new Customer.Builder()
+                    .setAccountNumber(Integer.parseInt(req.getParameter("accountNumber")))
+                    .setName(req.getParameter("name"))
+                    .setAddress(req.getParameter("address"))
+                    .setPhoneNumber(req.getParameter("phoneNumber"))
+                    .setUnitsConsumed(Integer.parseInt(req.getParameter("unitsConsumed")))
+                    .build();
+
             if ("add".equals(action)) {
-                Customer c = new Customer();
-                c.setAccountNumber(Integer.parseInt(req.getParameter("accountNumber")));
-                c.setName(req.getParameter("name"));
-                c.setAddress(req.getParameter("address"));
-                c.setPhoneNumber(req.getParameter("phoneNumber"));
-                c.setUnitsConsumed(Integer.parseInt(req.getParameter("unitsConsumed")));
-
                 service.addCustomer(c);
-                resp.sendRedirect("customers");
-
             } else if ("edit".equals(action)) {
-                Customer c = new Customer();
-                c.setAccountNumber(Integer.parseInt(req.getParameter("accountNumber")));
-                c.setName(req.getParameter("name"));
-                c.setAddress(req.getParameter("address"));
-                c.setPhoneNumber(req.getParameter("phoneNumber"));
-                c.setUnitsConsumed(Integer.parseInt(req.getParameter("unitsConsumed")));
-
                 service.updateCustomer(c);
-                resp.sendRedirect("customers");
             }
+
+            resp.sendRedirect("customers");
+
         } catch (Exception e) {
-            throw new ServletException(e);
+            throw new ServletException("Error handling POST request", e);
         }
     }
 }
-

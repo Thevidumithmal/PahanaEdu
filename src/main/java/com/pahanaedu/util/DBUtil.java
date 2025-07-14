@@ -9,13 +9,31 @@ public class DBUtil {
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
-    public static Connection getConnection() throws SQLException {
+    private static DBUtil instance;
+
+    // Private constructor to prevent instantiation
+    private DBUtil() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // Explicitly load the MySQL driver
+            Class.forName("com.mysql.cj.jdbc.Driver"); // Load driver once
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("MySQL JDBC Driver not found.", e);
         }
+    }
+
+    // Thread-safe lazy initialization
+    public static DBUtil getInstance() {
+        if (instance == null) {
+            synchronized (DBUtil.class) {
+                if (instance == null) {
+                    instance = new DBUtil();
+                }
+            }
+        }
+        return instance;
+    }
+
+    // Return a new DB connection
+    public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }
-

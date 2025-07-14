@@ -11,7 +11,6 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.Connection;
 
-
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
 
@@ -25,7 +24,7 @@ public class LoginController extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        try (Connection conn = DBUtil.getConnection()) {
+        try (Connection conn = DBUtil.getInstance().getConnection()) {
             UserService userService = new UserService(conn);
             User user = userService.authenticate(username, password);
             if (user != null) {
@@ -37,7 +36,7 @@ public class LoginController extends HttpServlet {
                 req.getRequestDispatcher("jsp/login.jsp").forward(req, resp);
             }
         } catch (Exception e) {
-            throw new ServletException(e);
+            throw new ServletException("Login failed", e);
         }
     }
 }
