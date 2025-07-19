@@ -39,6 +39,11 @@ public class UserService {
         return userDao.deleteUser(id);
     }
 
+    public boolean resetPassword(String username, String phone, String newPassword) throws SQLException {
+        return userDao.resetPassword(username, phone, newPassword);
+    }
+
+
 
 }
 

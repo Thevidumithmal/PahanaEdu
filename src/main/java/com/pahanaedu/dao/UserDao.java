@@ -106,6 +106,17 @@ public class UserDao {
     }
 
 
+    public boolean resetPassword(String username, String phone, String newPassword) throws SQLException {
+        String sql = "UPDATE users SET password = ? WHERE username = ? AND phone = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, newPassword);
+            stmt.setString(2, username);
+            stmt.setString(3, phone);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+
 }
 
 
