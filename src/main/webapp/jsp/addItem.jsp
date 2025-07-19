@@ -31,7 +31,7 @@
 <p style="color:red;"><%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %></p>
 
 <br>
-<a href="adminDashboard.jsp">← Back to Dashboard</a>
+<a href="${pageContext.request.contextPath}/jsp/adminDashboard.jsp">← Back to Dashboard</a>
 </body>
 </html>
 

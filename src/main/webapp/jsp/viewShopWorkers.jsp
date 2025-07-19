@@ -38,7 +38,7 @@
     <td><%= u.getPhone() %></td>
     <td><%= u.getAddress() %></td>
     <td>
-      <a href="editShopWorker.jsp?id=<%= u.getId() %>">Edit</a> |
+      <a href="editShopWorker?id=<%= u.getId() %>">Edit</a> |
       <a href="deleteShopWorker?id=<%= u.getId() %>" onclick="return confirm('Are you sure?')">Delete</a>
     </td>
   </tr>
@@ -49,7 +49,8 @@
 </table>
 
 <br>
-<a href="adminDashboard.jsp">← Back to Dashboard</a>
+<a href="${pageContext.request.contextPath}/jsp/adminDashboard.jsp">← Back to Dashboard</a>
+
 </body>
 </html>
 

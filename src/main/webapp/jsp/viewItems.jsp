@@ -22,7 +22,7 @@
     <th>ID</th><th>Name</th><th>Price</th><th>Actions</th>
   </tr>
   <%
-    if (items != null) {
+    if (items != null && !items.isEmpty()) {
       for (Item item : items) {
   %>
   <tr>
@@ -30,17 +30,23 @@
     <td><%= item.getName() %></td>
     <td><%= item.getPrice() %></td>
     <td>
-      <a href="editItem.jsp?id=<%= item.getId() %>">Edit</a> |
+      <a href="editItem?id=<%= item.getId() %>">Edit</a> |
       <a href="deleteItem?id=<%= item.getId() %>" onclick="return confirm('Are you sure?')">Delete</a>
     </td>
   </tr>
   <%
-      }
+    }
+  } else {
+  %>
+  <tr>
+    <td colspan="4">No items found.</td>
+  </tr>
+  <%
     }
   %>
 </table>
 
 <br>
-<a href="adminDashboard.jsp">← Back to Dashboard</a>
+<a href="${pageContext.request.contextPath}/jsp/adminDashboard.jsp">← Back to Dashboard</a>
 </body>
 </html>

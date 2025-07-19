@@ -1,6 +1,5 @@
 package com.pahanaedu.controller;
 
-import com.pahanaedu.model.Item;
 import com.pahanaedu.service.ItemService;
 import com.pahanaedu.util.DBUtil;
 
@@ -10,24 +9,23 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.List;
 
-@WebServlet("/viewItems")
-public class ViewItemsController extends HttpServlet {
+@WebServlet("/deleteItem")
+public class DeleteItemController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        int id = Integer.parseInt(req.getParameter("id"));
+
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             ItemService itemService = new ItemService(conn);
-            List<Item> items = itemService.getAllItems();
-            req.setAttribute("items", items);
-            req.getRequestDispatcher("jsp/viewItems.jsp").forward(req, resp);
+            itemService.deleteItem(id);
+            resp.sendRedirect("viewItems");
 
         } catch (Exception e) {
-            throw new ServletException("Failed to load items", e);
+            throw new ServletException("Failed to delete item", e);
         }
     }
 }
-

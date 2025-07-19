@@ -24,7 +24,7 @@
 <h3>Manage Items</h3>
 <ul>
   <li><a href="addItem.jsp">Add New Item</a></li>
-  <li><a href="viewItems.jsp">View / Edit / Delete Items</a></li>
+  <li><a href="${pageContext.request.contextPath}/viewItems">View / Edit / Delete Items</a></li>
 </ul>
 
 <form action="logout.jsp" method="post">
