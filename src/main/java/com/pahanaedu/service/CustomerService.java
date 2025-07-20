@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class CustomerService {
-    private CustomerDao customerDao;
+    private final CustomerDao customerDao;
 
     public CustomerService(Connection connection) {
         this.customerDao = new CustomerDao(connection);
@@ -18,19 +18,15 @@ public class CustomerService {
         return customerDao.addCustomer(customer);
     }
 
-    public List<Customer> getAllCustomers() throws SQLException {
-        return customerDao.getAllCustomers();
+    public List<Customer> getCustomersByPhone(String phone) throws SQLException {
+        return customerDao.getCustomersByPhone(phone);
     }
 
-    public Customer getCustomerByAccountNumber(int accountNumber) throws SQLException {
-        return customerDao.getCustomerByAccountNumber(accountNumber);
+    public Customer getCustomerById(int id) throws SQLException {
+        return customerDao.getCustomerById(id);
     }
 
     public boolean updateCustomer(Customer customer) throws SQLException {
         return customerDao.updateCustomer(customer);
-    }
-
-    public boolean deleteCustomer(int accountNumber) throws SQLException {
-        return customerDao.deleteCustomer(accountNumber);
     }
 }
