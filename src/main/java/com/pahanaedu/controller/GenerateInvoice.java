@@ -74,6 +74,8 @@ public class GenerateInvoice extends HttpServlet {
             req.setAttribute("billItems", billItems);
             req.setAttribute("total", total);
             req.setAttribute("customer", customer); // ✅ Pass to JSP
+            req.setAttribute("customerName", customer.getName()); // ✅ Add this line
+
             req.getRequestDispatcher("jsp/invoicePreview.jsp").forward(req, resp);
 
         } catch (Exception e) {

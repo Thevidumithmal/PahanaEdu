@@ -56,7 +56,8 @@
 <p style="color: red;">❌ No items found for invoice.</p>
 <% } %>
 
-<br><a href="shopDashboard.jsp">← Back to Dashboard</a>
+<br><a href="${pageContext.request.contextPath}/jsp/shopDashboard.jsp">← Back to Dashboard</a>
+
 
 </body>
 </html>

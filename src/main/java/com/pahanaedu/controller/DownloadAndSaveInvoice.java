@@ -1,17 +1,20 @@
 package com.pahanaedu.controller;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import com.pahanaedu.dao.InvoiceDao;
+import com.pahanaedu.util.DBUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import java.io.*;
-import java.math.BigDecimal;
-import java.sql.*;
-import java.util.*;
-import java.util.List;
+import com.pahanaedu.model.InvoiceItem;
+import com.pahanaedu.model.Invoice;
 
-import com.pahanaedu.util.DBUtil;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.util.List;
+import java.util.Map;
 
 @WebServlet("/downloadAndSaveInvoice")
 public class DownloadAndSaveInvoice extends HttpServlet {
@@ -20,38 +23,31 @@ public class DownloadAndSaveInvoice extends HttpServlet {
             throws ServletException, IOException {
 
         String phoneNumber = request.getParameter("phoneNumber");
+        String customerName = request.getParameter("customerName");
+
         List<Map<String, Object>> billItems = (List<Map<String, Object>>) request.getSession().getAttribute("billItems");
         BigDecimal total = (BigDecimal) request.getSession().getAttribute("total");
+        Invoice invoice = new Invoice(customerName, phoneNumber, total);
 
-        int invoiceId = 0;
+        int invoiceId;
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             conn.setAutoCommit(false);
 
-            // Save invoice
-            String insertInvoiceSql = "INSERT INTO invoices (phone_number, invoice_date, total) VALUES (?, NOW(), ?)";
-            PreparedStatement invoiceStmt = conn.prepareStatement(insertInvoiceSql, Statement.RETURN_GENERATED_KEYS);
-            invoiceStmt.setString(1, phoneNumber);
-            invoiceStmt.setBigDecimal(2, total);
-            invoiceStmt.executeUpdate();
+            InvoiceDao invoiceDao = new InvoiceDao(conn);
+            invoiceId = invoiceDao.saveInvoice(invoice);
+            List<InvoiceItem> invoiceItemList = billItems.stream().map(item -> {
+                InvoiceItem invoiceItem = new InvoiceItem();
+                invoiceItem.setItemName((String) item.get("itemName"));
+                invoiceItem.setQuantity((Integer) item.get("quantity"));
+                invoiceItem.setUnitPrice((BigDecimal) item.get("unitPrice"));
+                invoiceItem.setSubtotal((BigDecimal) item.get("subtotal"));
+                return invoiceItem;
+            }).toList();
 
-            ResultSet rs = invoiceStmt.getGeneratedKeys();
-            if (rs.next()) {
-                invoiceId = rs.getInt(1);
-            }
+            invoiceDao.saveInvoiceItems(invoiceId, invoiceItemList);
 
-            String insertItemSql = "INSERT INTO invoice_items (invoice_id, item_name, quantity, unit_price, subtotal) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement itemStmt = conn.prepareStatement(insertItemSql);
 
-            for (Map<String, Object> item : billItems) {
-                itemStmt.setInt(1, invoiceId);
-                itemStmt.setString(2, (String) item.get("itemName"));
-                itemStmt.setInt(3, (Integer) item.get("quantity"));
-                itemStmt.setBigDecimal(4, (BigDecimal) item.get("unitPrice"));
-                itemStmt.setBigDecimal(5, (BigDecimal) item.get("subtotal"));
-                itemStmt.addBatch();
-            }
-            itemStmt.executeBatch();
             conn.commit();
 
         } catch (Exception e) {
@@ -70,7 +66,24 @@ public class DownloadAndSaveInvoice extends HttpServlet {
             PdfWriter.getInstance(document, response.getOutputStream());
             document.open();
 
-            document.add(new Paragraph("Invoice"));
+            String logoPath = getServletContext().getRealPath("/image/logo.jpg");
+            Image logo = Image.getInstance(logoPath);
+            logo.scaleAbsolute(80, 80);
+            logo.setAlignment(Image.ALIGN_CENTER);
+            document.add(logo);
+
+            Paragraph header = new Paragraph("📚 PahanaEdu Book Shop", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20, BaseColor.BLUE));
+            header.setAlignment(Element.ALIGN_CENTER);
+            document.add(header);
+
+            Paragraph address = new Paragraph("No. 123, Main Street, Colombo 01, Sri Lanka", FontFactory.getFont(FontFactory.HELVETICA, 12));
+            address.setAlignment(Element.ALIGN_CENTER);
+            document.add(address);
+
+            document.add(new Paragraph(" "));
+            document.add(new Paragraph("🧾 Invoice", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
+            document.add(new Paragraph(" "));
+            document.add(new Paragraph("Customer Name: " + customerName));
             document.add(new Paragraph("Phone Number: " + phoneNumber));
             document.add(new Paragraph("Invoice ID: " + invoiceId));
             document.add(new Paragraph(" "));
@@ -90,6 +103,12 @@ public class DownloadAndSaveInvoice extends HttpServlet {
 
             document.add(table);
             document.add(new Paragraph("Total: " + total));
+
+            document.add(new Paragraph(" "));
+            Paragraph footer = new Paragraph("🛒 Thank you for shopping with us!", FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 12, BaseColor.DARK_GRAY));
+            footer.setAlignment(Element.ALIGN_CENTER);
+            document.add(footer);
+
             document.close();
 
         } catch (Exception e) {
