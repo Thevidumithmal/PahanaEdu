@@ -18,7 +18,7 @@ public class CustomerService {
         return customerDao.addCustomer(customer);
     }
 
-    public List<Customer> getCustomersByPhone(String phone) throws SQLException {
+    public Customer getCustomerByPhone(String phone) throws SQLException {
         return customerDao.getCustomersByPhone(phone);
     }
 

@@ -26,22 +26,20 @@ public class FetchCustomerForBill extends HttpServlet {
             CustomerDao customerDao = new CustomerDao(conn);
             ItemDao itemDao = new ItemDao(conn);
 
-            List<Customer> customerList = customerDao.getCustomersByPhone(phone);
-            Customer customer = customerList.isEmpty() ? null : customerList.get(0);
+            Customer customer = customerDao.getCustomersByPhone(phone);
             List<Item> items = itemDao.getAllItems();
 
             if (customer != null && !items.isEmpty()) {
                 req.setAttribute("customer", customer);
                 req.setAttribute("items", items);
             } else {
-                req.setAttribute("error", "Customer not found or no items available.");
+                req.setAttribute("error", "No customer found with that phone number or no items available.");
             }
 
             req.getRequestDispatcher("jsp/bill.jsp").forward(req, resp);
 
         } catch (Exception e) {
-            throw new ServletException("Error fetching data for billing", e);
+            throw new ServletException("Error fetching customer/item details", e);
         }
     }
 }
-

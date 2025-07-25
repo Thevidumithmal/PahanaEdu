@@ -23,23 +23,23 @@ public class CustomerDao {
         }
     }
 
-    public List<Customer> getCustomersByPhone(String phone) throws SQLException {
-        List<Customer> customers = new ArrayList<>();
+    public Customer getCustomersByPhone(String phone) throws SQLException {
         String sql = "SELECT * FROM customers WHERE phone = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, phone);
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 Customer customer = new Customer();
                 customer.setId(rs.getInt("id"));
                 customer.setName(rs.getString("name"));
                 customer.setPhone(rs.getString("phone"));
                 customer.setAddress(rs.getString("address"));
-                customers.add(customer);
+                return customer;
             }
         }
-        return customers;
+        return null;
     }
+
 
     public Customer getCustomerById(int id) throws SQLException {
         String sql = "SELECT * FROM customers WHERE id = ?";

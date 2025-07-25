@@ -11,6 +11,7 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,13 +26,16 @@ public class ViewCustomerController extends HttpServlet {
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             CustomerDao dao = new CustomerDao(conn);
-            List<Customer> customers = dao.getCustomersByPhone(phone);
+            Customer customer = dao.getCustomersByPhone(phone);
 
-            if (customers != null && !customers.isEmpty()) {
+            if (customer != null) {
+                List<Customer> customers = new ArrayList<>();
+                customers.add(customer);
                 req.setAttribute("customers", customers);
             } else {
                 req.setAttribute("notFound", "No customer found with that phone number.");
             }
+
 
             req.getRequestDispatcher("jsp/viewCustomers.jsp").forward(req, resp);
 
