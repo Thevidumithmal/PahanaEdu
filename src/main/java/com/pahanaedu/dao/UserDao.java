@@ -23,13 +23,15 @@ public class UserDao {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    User user = new User();
-                    user.setId(rs.getInt("id"));
-                    user.setUsername(rs.getString("username"));
-                    user.setPassword(rs.getString("password"));
-                    user.setRole(rs.getString("role"));
-                    user.setPhone(rs.getString("phone"));
-                    user.setAddress(rs.getString("address"));
+                    User user = new User.Builder()
+                            .setId(rs.getInt("id"))
+                            .setUsername(rs.getString("username"))
+                            .setPassword(rs.getString("password"))
+                            .setRole(rs.getString("role"))
+                            .setPhone(rs.getString("phone"))
+                            .setAddress(rs.getString("address"))
+                            .build();
+
                     return user;
                 }
             }
@@ -56,11 +58,14 @@ public class UserDao {
             stmt.setString(1, role);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    User user = new User();
-                    user.setId(rs.getInt("id"));
-                    user.setUsername(rs.getString("username"));
-                    user.setPhone(rs.getString("phone"));
-                    user.setAddress(rs.getString("address"));
+                    User user = new User.Builder()
+                            .setId(rs.getInt("id"))
+                            .setUsername(rs.getString("username"))
+                            .setPhone(rs.getString("phone"))
+                            .setAddress(rs.getString("address"))
+                            .build();
+
+
                     users.add(user);
                 }
             }
@@ -74,11 +79,13 @@ public class UserDao {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    User user = new User();
-                    user.setId(rs.getInt("id"));
-                    user.setUsername(rs.getString("username"));
-                    user.setPhone(rs.getString("phone"));
-                    user.setAddress(rs.getString("address"));
+                    User user = new User.Builder()
+                            .setId(rs.getInt("id"))
+                            .setUsername(rs.getString("username"))
+                            .setPhone(rs.getString("phone"))
+                            .setAddress(rs.getString("address"))
+                            .build();
+;
                     return user;
                 }
             }

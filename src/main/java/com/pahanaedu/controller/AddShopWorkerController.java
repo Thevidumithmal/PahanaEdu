@@ -23,12 +23,13 @@ public class AddShopWorkerController extends HttpServlet {
         String phone = req.getParameter("phone");
         String address = req.getParameter("address");
 
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setPhone(phone);
-        user.setAddress(address);
-        user.setRole("shopworker");
+        User user = new User.Builder()
+                .setUsername(username)
+                .setPassword(password)
+                .setPhone(phone)
+                .setAddress(address)
+                .setRole("shopworker")
+                .build();
 
         try (Connection connection = DBUtil.getInstance().getConnection()) {
             UserService userService = new UserService(connection);

@@ -5,6 +5,7 @@ import com.pahanaedu.model.InvoiceItem;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InvoiceDao {
@@ -18,11 +19,13 @@ public class InvoiceDao {
      * Saves the invoice to the database and returns the generated invoice ID.
      */
     public int saveInvoice(Invoice invoice) throws SQLException {
-        String sql = "INSERT INTO invoices (customer_name, phone_number, invoice_date, total) VALUES (?, ?, NOW(), ?)";
+        String sql = "INSERT INTO invoices (customer_name, phone_number, invoice_date, total) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, invoice.getCustomerName());
             stmt.setString(2, invoice.getPhoneNumber());
-            stmt.setBigDecimal(3, invoice.getTotal());
+            stmt.setTimestamp(3, new java.sql.Timestamp(invoice.getCreatedAt().getTime()));
+            stmt.setBigDecimal(4, invoice.getTotal());
+
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -54,4 +57,44 @@ public class InvoiceDao {
             stmt.executeBatch();
         }
     }
+
+    public List<Invoice> getInvoicesByPhoneNumber(String phoneNumber) throws SQLException {
+        String sql = "SELECT * FROM invoices WHERE phone_number = ? ORDER BY invoice_date DESC";
+        List<Invoice> invoices = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, phoneNumber);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Invoice invoice = new Invoice();
+                invoice.setId(rs.getInt("id"));
+                invoice.setCustomerName(rs.getString("customer_name"));
+                invoice.setPhoneNumber(rs.getString("phone_number"));
+                invoice.setTotal(rs.getBigDecimal("total"));
+                // Optionally add invoice date if your model has it
+                invoices.add(invoice);
+            }
+        }
+        return invoices;
+    }
+
+    public List<InvoiceItem> getInvoiceItemsByInvoiceId(int invoiceId) throws SQLException {
+        String sql = "SELECT * FROM invoice_items WHERE invoice_id = ?";
+        List<InvoiceItem> items = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, invoiceId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                InvoiceItem item = new InvoiceItem();
+                item.setItemName(rs.getString("item_name"));
+                item.setQuantity(rs.getInt("quantity"));
+                item.setUnitPrice(rs.getBigDecimal("unit_price"));
+                item.setSubtotal(rs.getBigDecimal("subtotal"));
+                items.add(item);
+            }
+        }
+        return items;
+    }
+
+
+
 }

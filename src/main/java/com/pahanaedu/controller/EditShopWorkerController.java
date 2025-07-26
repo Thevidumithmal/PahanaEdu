@@ -43,11 +43,13 @@ public class EditShopWorkerController extends HttpServlet {
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             UserService userService = new UserService(conn);
-            User user = new User();
-            user.setId(id);
-            user.setUsername(username);
-            user.setPhone(phone);
-            user.setAddress(address);
+            User user = new User.Builder()
+                    .setId(id)
+                    .setUsername(username)
+                    .setPhone(phone)
+                    .setAddress(address)
+                    .build();
+
 
             boolean updated = userService.updateUser(user);
             if (updated) {

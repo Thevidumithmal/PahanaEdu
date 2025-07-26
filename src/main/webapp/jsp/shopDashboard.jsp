@@ -25,6 +25,8 @@
   <li><a href="addCustomer.jsp">➕ Add New Customer</a></li>
   <li><a href="viewCustomers.jsp">🔍 View Customer by Phone No</a></li>
   <li><a href="bill.jsp">🧾 Generate Bill / Invoice</a></li>
+  <li><a href="searchInvoices.jsp">🧾 search Invoice</a></li>
+
   <li>  <a href="${pageContext.request.contextPath}/jsp/logout.jsp">🚪 Logout</a></li>
 </ul>
 

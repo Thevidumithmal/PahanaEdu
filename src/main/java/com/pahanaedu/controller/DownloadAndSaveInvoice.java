@@ -27,7 +27,8 @@ public class DownloadAndSaveInvoice extends HttpServlet {
 
         List<Map<String, Object>> billItems = (List<Map<String, Object>>) request.getSession().getAttribute("billItems");
         BigDecimal total = (BigDecimal) request.getSession().getAttribute("total");
-        Invoice invoice = new Invoice(customerName, phoneNumber, total);
+        Invoice invoice = new Invoice(customerName, phoneNumber, total, new java.util.Date());
+
 
         int invoiceId;
 
