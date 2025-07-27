@@ -1,6 +1,8 @@
 package com.pahanaedu.controller;
 
 import com.pahanaedu.model.User;
+import com.pahanaedu.dto.UserDTO;
+import com.pahanaedu.mapper.UserMapper;
 import com.pahanaedu.service.UserService;
 import com.pahanaedu.util.DBUtil;
 
@@ -24,7 +26,10 @@ public class EditShopWorkerController extends HttpServlet {
             UserService userService = new UserService(conn);
             User worker = userService.getUserById(id);
 
-            req.setAttribute("worker", worker);
+            // Convert User model to UserDTO
+            UserDTO workerDTO = UserMapper.toDto(worker);
+
+            req.setAttribute("worker", workerDTO);
             req.getRequestDispatcher("jsp/editShopWorker.jsp").forward(req, resp);
 
         } catch (Exception e) {
@@ -50,7 +55,6 @@ public class EditShopWorkerController extends HttpServlet {
                     .setAddress(address)
                     .build();
 
-
             boolean updated = userService.updateUser(user);
             if (updated) {
                 resp.sendRedirect("viewShopWorkers");
@@ -64,4 +68,3 @@ public class EditShopWorkerController extends HttpServlet {
         }
     }
 }
-

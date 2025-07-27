@@ -1,21 +1,14 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 7/19/2025
-  Time: 1:57 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.pahanaedu.model.User" %>
+<%@ page import="com.pahanaedu.dto.UserDTO" %>
 <%@ page import="java.util.List" %>
 <%
-  User admin = (User) session.getAttribute("admin");
+  UserDTO admin = (UserDTO) session.getAttribute("admin");
   if (admin == null) {
     response.sendRedirect("adminLogin.jsp");
     return;
   }
 
-  List<User> workers = (List<User>) request.getAttribute("shopWorkers");
+  List<UserDTO> workers = (List<UserDTO>) request.getAttribute("shopWorkers");
 %>
 <html>
 <head>
@@ -30,7 +23,7 @@
   </tr>
   <%
     if (workers != null) {
-      for (User u : workers) {
+      for (UserDTO u : workers) {
   %>
   <tr>
     <td><%= u.getId() %></td>
@@ -53,4 +46,3 @@
 
 </body>
 </html>
-
