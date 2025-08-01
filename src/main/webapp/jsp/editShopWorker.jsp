@@ -1,20 +1,13 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 7/19/2025
-  Time: 2:01 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.pahanaedu.model.User" %>
+<%@ page import="com.pahanaedu.dto.UserDTO" %>
 <%
-  User admin = (User) session.getAttribute("admin");
+  UserDTO admin = (UserDTO) session.getAttribute("admin");
   if (admin == null) {
     response.sendRedirect("adminLogin.jsp");
     return;
   }
 
-  User worker = (User) request.getAttribute("worker");
+  UserDTO worker = (UserDTO) request.getAttribute("worker");
   if (worker == null) {
     response.sendRedirect("viewShopWorkers");
     return;
@@ -40,4 +33,3 @@
 <a href="viewShopWorkers">← Back</a>
 </body>
 </html>
-

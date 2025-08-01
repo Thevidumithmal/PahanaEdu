@@ -1,9 +1,11 @@
 package com.pahanaedu.controller;
 
-
+import com.pahanaedu.dto.UserDTO;
+import com.pahanaedu.mapper.UserMapper;
 import com.pahanaedu.model.User;
 import com.pahanaedu.service.UserService;
 import com.pahanaedu.util.DBUtil;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -23,11 +25,12 @@ public class AdminLoginController extends HttpServlet {
 
         try (Connection connection = DBUtil.getInstance().getConnection()) {
             UserService userService = new UserService(connection);
-            User admin = userService.login(username, password, "admin");
+            User adminEntity = userService.login(username, password, "admin");
 
-            if (admin != null) {
+            if (adminEntity != null) {
+                UserDTO adminDTO = UserMapper.toDto(adminEntity);
                 HttpSession session = req.getSession();
-                session.setAttribute("admin", admin);
+                session.setAttribute("admin", adminDTO);
                 resp.sendRedirect("jsp/adminDashboard.jsp");
             } else {
                 req.setAttribute("error", "Invalid credentials.");
