@@ -12,11 +12,12 @@ public class CustomerDao {
     }
 
     public boolean addCustomer(Customer customer) throws SQLException {
-        String sql = "INSERT INTO customers (name, phone, address) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO customers (name, phone, address, nic_no) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, customer.getName());
             stmt.setString(2, customer.getPhone());
             stmt.setString(3, customer.getAddress());
+            stmt.setString(4, customer.getNicNo()); // NEW FIELD
             return stmt.executeUpdate() > 0;
         }
     }
@@ -32,12 +33,12 @@ public class CustomerDao {
                 customer.setName(rs.getString("name"));
                 customer.setPhone(rs.getString("phone"));
                 customer.setAddress(rs.getString("address"));
+                customer.setNicNo(rs.getString("nic_no")); // NEW FIELD
                 return customer;
             }
         }
         return null;
     }
-
 
     public Customer getCustomerById(int id) throws SQLException {
         String sql = "SELECT * FROM customers WHERE id = ?";
@@ -50,6 +51,7 @@ public class CustomerDao {
                 customer.setName(rs.getString("name"));
                 customer.setPhone(rs.getString("phone"));
                 customer.setAddress(rs.getString("address"));
+                customer.setNicNo(rs.getString("nic_no")); // NEW FIELD
                 return customer;
             }
         }
@@ -57,12 +59,13 @@ public class CustomerDao {
     }
 
     public boolean updateCustomer(Customer customer) throws SQLException {
-        String sql = "UPDATE customers SET name = ?, phone = ?, address = ? WHERE id = ?";
+        String sql = "UPDATE customers SET name = ?, phone = ?, address = ?, nic_no = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, customer.getName());
             stmt.setString(2, customer.getPhone());
             stmt.setString(3, customer.getAddress());
-            stmt.setInt(4, customer.getId());
+            stmt.setString(4, customer.getNicNo()); // NEW FIELD
+            stmt.setInt(5, customer.getId());
             return stmt.executeUpdate() > 0;
         }
     }

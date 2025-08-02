@@ -18,11 +18,13 @@ public class AddCustomerController extends HttpServlet {
 
         String name = req.getParameter("name");
         String phone = req.getParameter("phone");
+        String nicNo = req.getParameter("nicNo");  // new field
         String address = req.getParameter("address");
 
         CustomerDTO dto = new CustomerDTO();
         dto.setName(name);
         dto.setPhone(phone);
+        dto.setNicNo(nicNo);
         dto.setAddress(address);
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
@@ -30,8 +32,10 @@ public class AddCustomerController extends HttpServlet {
             boolean success = service.addCustomer(dto);
 
             if (success) {
-                resp.sendRedirect(req.getContextPath() + "/jsp/shopDashboard.jsp?msg=added");
+                // Redirect back to addCustomer.jsp with success message
+                resp.sendRedirect(req.getContextPath() + "/jsp/addCustomer.jsp?msg=added");
             } else {
+                // Redirect back with error flag
                 resp.sendRedirect(req.getContextPath() + "/jsp/addCustomer.jsp?error=true");
             }
         } catch (Exception e) {

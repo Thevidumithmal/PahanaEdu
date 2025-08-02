@@ -5,8 +5,10 @@ public class Customer {
     private String name;
     private String phone;
     private String address;
+    private String nicNo;  // NEW FIELD
 
     // Getters and setters
+
 
     public int getId() {
         return id;
@@ -38,5 +40,13 @@ public class Customer {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getNicNo() {
+        return nicNo;
+    }
+
+    public void setNicNo(String nicNo) {
+        this.nicNo = nicNo;
     }
 }
