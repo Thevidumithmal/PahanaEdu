@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, com.pahanaedu.model.Item, com.pahanaedu.dto.CustomerDTO" %>
+<%@ page import="java.util.*, com.pahanaedu.business.item.model.Item, com.pahanaedu.business.customer.dto.CustomerDTO" %>
 <html>
 <head>
   <title>Generate Invoice</title>
@@ -24,7 +24,8 @@
 <h3>Customer Info</h3>
 Name: <%= customer.getName() %><br>
 Phone: <%= customer.getPhone() %><br>
-Address: <%= customer.getAddress() %><br><br>
+Address: <%= customer.getAddress() %><br>
+NIC No: <%= customer.getNicNo() %><br><br>
 
 <!-- Step 2: Select Items & Quantity -->
 <form action="${pageContext.request.contextPath}/generateInvoiceCustomer" method="post">

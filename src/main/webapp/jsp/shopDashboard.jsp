@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.pahanaedu.model.User" %>
+<%@ page import="com.pahanaedu.business.user.model.User" %>
 <%
   User shopworker = (User) session.getAttribute("shopworker");
   if (shopworker == null) {

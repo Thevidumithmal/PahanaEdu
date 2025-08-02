@@ -19,5 +19,7 @@
     <p style="color:red">${error}</p>
 </c:if>
 
+<a href="${pageContext.request.contextPath}/jsp/shopDashboard.jsp">← Back to Dashboard</a>
+
 </body>
 </html>
