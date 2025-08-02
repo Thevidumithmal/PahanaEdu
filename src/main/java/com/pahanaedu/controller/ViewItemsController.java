@@ -1,6 +1,6 @@
 package com.pahanaedu.controller;
 
-import com.pahanaedu.model.Item;
+import com.pahanaedu.dto.ItemDTO;
 import com.pahanaedu.service.ItemService;
 import com.pahanaedu.util.DBUtil;
 
@@ -21,7 +21,8 @@ public class ViewItemsController extends HttpServlet {
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             ItemService itemService = new ItemService(conn);
-            List<Item> items = itemService.getAllItems();
+            List<ItemDTO> items = itemService.getAllItems();
+
             req.setAttribute("items", items);
             req.getRequestDispatcher("jsp/viewItems.jsp").forward(req, resp);
 
@@ -30,4 +31,3 @@ public class ViewItemsController extends HttpServlet {
         }
     }
 }
-

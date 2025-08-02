@@ -1,7 +1,8 @@
 package com.pahanaedu.controller;
 
-import com.pahanaedu.dao.CustomerDao;
 import com.pahanaedu.dao.ItemDao;
+import com.pahanaedu.dto.CustomerDTO;
+import com.pahanaedu.mapper.CustomerMapper;
 import com.pahanaedu.model.Customer;
 import com.pahanaedu.model.Item;
 import com.pahanaedu.util.DBUtil;
@@ -27,15 +28,17 @@ public class GenerateInvoice extends HttpServlet {
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             ItemDao itemDao = new ItemDao(conn);
-            CustomerDao customerDao = new CustomerDao(conn); // ✅ Add this
+            com.pahanaedu.dao.CustomerDao customerDao = new com.pahanaedu.dao.CustomerDao(conn);
 
-            // ✅ Fetch customer from DB
-            Customer customer = customerDao.getCustomersByPhone(phoneNumber);
-            if (customer == null) {
+            Customer customerModel = customerDao.getCustomersByPhone(phoneNumber);
+            if (customerModel == null) {
                 req.setAttribute("error", "No customer found for phone number: " + phoneNumber);
                 req.getRequestDispatcher("jsp/bill.jsp").forward(req, resp);
                 return;
             }
+
+            // Convert to DTO
+            CustomerDTO customerDto = CustomerMapper.toDTO(customerModel);
 
             List<Item> allItems = itemDao.getAllItems();
             for (Item item : allItems) {
@@ -63,18 +66,17 @@ public class GenerateInvoice extends HttpServlet {
                 return;
             }
 
-            // ✅ Store in session for future use
             HttpSession session = req.getSession();
             session.setAttribute("billItems", billItems);
             session.setAttribute("total", total);
             session.setAttribute("phoneNumber", phoneNumber);
-            session.setAttribute("customer", customer); // ✅ Store full customer object
+            session.setAttribute("customer", customerDto); // Store DTO in session
 
             req.setAttribute("phoneNumber", phoneNumber);
             req.setAttribute("billItems", billItems);
             req.setAttribute("total", total);
-            req.setAttribute("customer", customer); // ✅ Pass to JSP
-            req.setAttribute("customerName", customer.getName()); // ✅ Add this line
+            req.setAttribute("customer", customerDto);  // Pass DTO to JSP
+            req.setAttribute("customerName", customerDto.getName());
 
             req.getRequestDispatcher("jsp/invoicePreview.jsp").forward(req, resp);
 
@@ -83,4 +85,3 @@ public class GenerateInvoice extends HttpServlet {
         }
     }
 }
-

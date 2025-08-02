@@ -1,6 +1,6 @@
 package com.pahanaedu.controller;
 
-import com.pahanaedu.model.Item;
+import com.pahanaedu.dto.ItemDTO;
 import com.pahanaedu.service.ItemService;
 import com.pahanaedu.util.DBUtil;
 
@@ -22,8 +22,9 @@ public class EditItemController extends HttpServlet {
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             ItemService itemService = new ItemService(conn);
-            Item item = itemService.getItemById(id);
-            req.setAttribute("item", item);
+            ItemDTO itemDTO = itemService.getItemById(id);
+
+            req.setAttribute("item", itemDTO);
             req.getRequestDispatcher("jsp/editItem.jsp").forward(req, resp);
 
         } catch (Exception e) {
@@ -39,15 +40,21 @@ public class EditItemController extends HttpServlet {
         String name = req.getParameter("name");
         BigDecimal price = new BigDecimal(req.getParameter("price"));
 
-        Item item = new Item();
-        item.setId(id);
-        item.setName(name);
-        item.setPrice(price);
+        ItemDTO itemDTO = new ItemDTO();
+        itemDTO.setId(id);
+        itemDTO.setName(name);
+        itemDTO.setPrice(price);
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             ItemService itemService = new ItemService(conn);
-            itemService.updateItem(item);
-            resp.sendRedirect("viewItems");
+            boolean updated = itemService.updateItem(itemDTO);
+
+            if (updated) {
+                resp.sendRedirect("viewItems");
+            } else {
+                req.setAttribute("error", "Failed to update item.");
+                req.getRequestDispatcher("jsp/editItem.jsp").forward(req, resp);
+            }
 
         } catch (Exception e) {
             throw new ServletException("Failed to update item", e);

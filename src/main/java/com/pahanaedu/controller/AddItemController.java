@@ -1,6 +1,6 @@
 package com.pahanaedu.controller;
 
-import com.pahanaedu.model.Item;
+import com.pahanaedu.dto.ItemDTO;
 import com.pahanaedu.service.ItemService;
 import com.pahanaedu.util.DBUtil;
 
@@ -22,13 +22,13 @@ public class AddItemController extends HttpServlet {
         String name = req.getParameter("name");
         BigDecimal price = new BigDecimal(req.getParameter("price"));
 
-        Item item = new Item();
-        item.setName(name);
-        item.setPrice(price);
+        ItemDTO itemDTO = new ItemDTO();
+        itemDTO.setName(name);
+        itemDTO.setPrice(price);
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             ItemService itemService = new ItemService(conn);
-            boolean added = itemService.addItem(item);
+            boolean added = itemService.addItem(itemDTO);
 
             if (added) {
                 req.setAttribute("success", "Item added successfully.");
@@ -43,4 +43,3 @@ public class AddItemController extends HttpServlet {
         }
     }
 }
-

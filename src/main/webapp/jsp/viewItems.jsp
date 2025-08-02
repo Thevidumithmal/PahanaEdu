@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.pahanaedu.dto.UserDTO" %>
-<%@ page import="com.pahanaedu.model.Item" %>
+<%@ page import="com.pahanaedu.dto.ItemDTO" %>
 <%@ page import="java.util.List" %>
 <%
   UserDTO admin = (UserDTO) session.getAttribute("admin");
@@ -9,7 +9,7 @@
     return;
   }
 
-  List<Item> items = (List<Item>) request.getAttribute("items");
+  List<ItemDTO> items = (List<ItemDTO>) request.getAttribute("items");
 %>
 <html>
 <head>
@@ -24,7 +24,7 @@
   </tr>
   <%
     if (items != null && !items.isEmpty()) {
-      for (Item item : items) {
+      for (ItemDTO item : items) {
   %>
   <tr>
     <td><%= item.getId() %></td>
