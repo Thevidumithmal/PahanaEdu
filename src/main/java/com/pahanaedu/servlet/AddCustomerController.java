@@ -18,8 +18,38 @@ public class AddCustomerController extends HttpServlet {
 
         String name = req.getParameter("name");
         String phone = req.getParameter("phone");
-        String nicNo = req.getParameter("nicNo");  // new field
+        String nicNo = req.getParameter("nicNo");
         String address = req.getParameter("address");
+
+        boolean hasErrors = false;
+        StringBuilder errorMsg = new StringBuilder();
+
+        // Validate phone: exactly 10 digits
+        if (phone == null || !phone.matches("\\d{10}")) {
+            hasErrors = true;
+            errorMsg.append("Phone must be exactly 10 digits (numbers only).<br>");
+        }
+
+        // Validate NIC: must be 10 or 12 characters, letters or numbers only
+        if (nicNo == null || !(nicNo.matches("[A-Za-z0-9]{10}") || nicNo.matches("[A-Za-z0-9]{12}"))) {
+            hasErrors = true;
+            errorMsg.append("NIC number must be exactly 10 or 12 characters (letters and/or numbers only).<br>");
+        }
+
+
+        if (hasErrors) {
+            req.setAttribute("validationErrors", errorMsg.toString());
+
+            // Repopulate form fields
+            req.setAttribute("name", name);
+            req.setAttribute("phone", phone);
+            req.setAttribute("nicNo", nicNo);
+            req.setAttribute("address", address);
+
+            // Forward back to JSP with errors
+            req.getRequestDispatcher("/jsp/addCustomer.jsp").forward(req, resp);
+            return;
+        }
 
         CustomerDTO dto = new CustomerDTO();
         dto.setName(name);
@@ -32,10 +62,8 @@ public class AddCustomerController extends HttpServlet {
             boolean success = service.addCustomer(dto);
 
             if (success) {
-                // Redirect back to addCustomer.jsp with success message
                 resp.sendRedirect(req.getContextPath() + "/jsp/addCustomer.jsp?msg=added");
             } else {
-                // Redirect back with error flag
                 resp.sendRedirect(req.getContextPath() + "/jsp/addCustomer.jsp?error=true");
             }
         } catch (Exception e) {
