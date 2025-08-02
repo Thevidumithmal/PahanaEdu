@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, com.pahanaedu.model.Item, com.pahanaedu.model.Customer" %>
+<%@ page import="java.util.*, com.pahanaedu.model.Item, com.pahanaedu.dto.CustomerDTO" %>
 <html>
 <head>
   <title>Generate Invoice</title>
@@ -15,7 +15,7 @@
 </form>
 
 <%
-  Customer customer = (Customer) request.getAttribute("customer");
+  CustomerDTO customer = (CustomerDTO) request.getAttribute("customer");
   List<Item> itemList = (List<Item>) request.getAttribute("items");
 
   if (customer != null && itemList != null) {

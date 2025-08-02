@@ -1,7 +1,7 @@
 package com.pahanaedu.controller;
 
-
-import com.pahanaedu.dao.CustomerDao;
+import com.pahanaedu.dto.CustomerDTO;
+import com.pahanaedu.mapper.CustomerMapper;
 import com.pahanaedu.model.Customer;
 import com.pahanaedu.util.DBUtil;
 
@@ -14,7 +14,6 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @WebServlet("/viewCustomer")
 public class ViewCustomerController extends HttpServlet {
 
@@ -25,17 +24,17 @@ public class ViewCustomerController extends HttpServlet {
         String phone = req.getParameter("phoneNumber");
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
-            CustomerDao dao = new CustomerDao(conn);
-            Customer customer = dao.getCustomersByPhone(phone);
+            Customer customerModel = new com.pahanaedu.dao.CustomerDao(conn).getCustomersByPhone(phone);
 
-            if (customer != null) {
-                List<Customer> customers = new ArrayList<>();
-                customers.add(customer);
+            if (customerModel != null) {
+                CustomerDTO customerDto = CustomerMapper.toDTO(customerModel);
+
+                List<CustomerDTO> customers = new ArrayList<>();
+                customers.add(customerDto);
                 req.setAttribute("customers", customers);
             } else {
                 req.setAttribute("notFound", "No customer found with that phone number.");
             }
-
 
             req.getRequestDispatcher("jsp/viewCustomers.jsp").forward(req, resp);
 
@@ -44,4 +43,3 @@ public class ViewCustomerController extends HttpServlet {
         }
     }
 }
-

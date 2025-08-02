@@ -1,7 +1,7 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.pahanaedu.model.Customer" %>
+<%@ page import="com.pahanaedu.dto.CustomerDTO" %>
 <%
-  List<Customer> customers = (List<Customer>) request.getAttribute("customers");
+  List<CustomerDTO> customers = (List<CustomerDTO>) request.getAttribute("customers");
   String notFound = (String) request.getAttribute("notFound");
 %>
 <html>
@@ -22,7 +22,7 @@
 <h3>Customer Details:</h3>
 <table border="1">
   <tr><th>ID</th><th>Name</th><th>Phone</th><th>Address</th></tr>
-  <% for (Customer customer : customers) { %>
+  <% for (CustomerDTO customer : customers) { %>
   <tr>
     <td><%= customer.getId() %></td>
     <td><%= customer.getName() %></td>
@@ -36,7 +36,7 @@
 <% } %>
 
 <br>
-<<a href="${pageContext.request.contextPath}/jsp/shopDashboard.jsp">← Back to Dashboard</a>
+<a href="${pageContext.request.contextPath}/jsp/shopDashboard.jsp">← Back to Dashboard</a>
 
 </body>
 </html>

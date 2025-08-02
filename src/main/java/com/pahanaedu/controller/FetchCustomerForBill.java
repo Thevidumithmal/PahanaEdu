@@ -1,7 +1,8 @@
 package com.pahanaedu.controller;
 
-import com.pahanaedu.dao.CustomerDao;
 import com.pahanaedu.dao.ItemDao;
+import com.pahanaedu.dto.CustomerDTO;
+import com.pahanaedu.mapper.CustomerMapper;
 import com.pahanaedu.model.Customer;
 import com.pahanaedu.model.Item;
 import com.pahanaedu.util.DBUtil;
@@ -23,14 +24,13 @@ public class FetchCustomerForBill extends HttpServlet {
         String phone = req.getParameter("phoneNumber");
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
-            CustomerDao customerDao = new CustomerDao(conn);
+            Customer customerModel = new com.pahanaedu.dao.CustomerDao(conn).getCustomersByPhone(phone);
             ItemDao itemDao = new ItemDao(conn);
-
-            Customer customer = customerDao.getCustomersByPhone(phone);
             List<Item> items = itemDao.getAllItems();
 
-            if (customer != null && !items.isEmpty()) {
-                req.setAttribute("customer", customer);
+            if (customerModel != null && !items.isEmpty()) {
+                CustomerDTO customerDto = CustomerMapper.toDTO(customerModel);
+                req.setAttribute("customer", customerDto);
                 req.setAttribute("items", items);
             } else {
                 req.setAttribute("error", "No customer found with that phone number or no items available.");
