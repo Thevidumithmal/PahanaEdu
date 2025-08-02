@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, com.pahanaedu.model.Item, com.pahanaedu.dto.CustomerDTO" %>
+<%@ page import="java.util.*, com.pahanaedu.business.item.model.Item, com.pahanaedu.business.customer.dto.CustomerDTO" %>
 <html>
 <head>
   <title>Generate Invoice</title>

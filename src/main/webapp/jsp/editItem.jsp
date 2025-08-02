@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.pahanaedu.dto.ItemDTO" %>
+<%@ page import="com.pahanaedu.business.item.dto.ItemDTO" %>
 <%
     ItemDTO item = (ItemDTO) request.getAttribute("item");
     if (item == null) {

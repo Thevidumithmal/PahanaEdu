@@ -13,6 +13,8 @@
     Phone: <input type="text" name="phone" required>
     <input type="submit" value="Search">
 </form>
+
+<a href="${pageContext.request.contextPath}/jsp/shopDashboard.jsp">← Back to Dashboard</a>
 </body>
 </html>
 

@@ -1,5 +1,5 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.pahanaedu.dto.CustomerDTO" %>
+<%@ page import="com.pahanaedu.business.customer.dto.CustomerDTO" %>
 <%
   List<CustomerDTO> customers = (List<CustomerDTO>) request.getAttribute("customers");
   String notFound = (String) request.getAttribute("notFound");

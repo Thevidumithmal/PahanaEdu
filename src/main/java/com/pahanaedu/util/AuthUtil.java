@@ -1,6 +1,6 @@
 package com.pahanaedu.util;
 
-import com.pahanaedu.model.User;
+import com.pahanaedu.business.user.model.User;
 
 import jakarta.servlet.http.HttpSession;
 

@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="java.util.*, com.pahanaedu.model.Invoice, com.pahanaedu.model.InvoiceItem" %>
+<%@ page import="java.util.*, com.pahanaedu.business.invoice.model.Invoice, com.pahanaedu.business.invioceItem.model.InvoiceItem" %>
 
 <!DOCTYPE html>
 <html>

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.pahanaedu.dto.UserDTO" %>
+<%@ page import="com.pahanaedu.business.user.dto.UserDTO" %>
 <%@ page import="java.util.List" %>
 <%
   UserDTO admin = (UserDTO) session.getAttribute("admin");
