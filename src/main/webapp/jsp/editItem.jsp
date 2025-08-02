@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.pahanaedu.model.Item" %>
+<%@ page import="com.pahanaedu.business.item.dto.ItemDTO" %>
 <%
-    Item item = (Item) request.getAttribute("item");
+    ItemDTO item = (ItemDTO) request.getAttribute("item");
     if (item == null) {
         response.sendRedirect("viewItems");
         return;

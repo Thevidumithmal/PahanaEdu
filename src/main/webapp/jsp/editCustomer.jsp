@@ -1,26 +1,55 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 7/12/2025
-  Time: 7:44 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.pahanaedu.business.customer.dto.CustomerDTO" %>
+<%
+    CustomerDTO customer = (CustomerDTO) request.getAttribute("customer");
+%>
 <html>
-<head><title>Edit Customer</title></head>
+<head>
+    <title>Edit Customer</title>
+    <style>
+        .validation-error {
+            color: red;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .message-error {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
 <body>
 <h2>Edit Customer</h2>
-<form action="customers" method="post">
-    <input type="hidden" name="action" value="edit" />
-    Account Number: <input type="number" name="accountNumber" value="${customer.accountNumber}" readonly /><br><br>
-    Name: <input type="text" name="name" value="${customer.name}" required /><br><br>
-    Address: <input type="text" name="address" value="${customer.address}" /><br><br>
-    Phone Number: <input type="text" name="phoneNumber" value="${customer.phoneNumber}" /><br><br>
-    Units Consumed: <input type="number" name="unitsConsumed" value="${customer.unitsConsumed}" /><br><br>
-    <input type="submit" value="Update Customer" />
+
+<div class="validation-error">
+    <%
+        String validationErrors = (String) request.getAttribute("validationErrors");
+        if (validationErrors != null) {
+            out.print(validationErrors);
+        }
+    %>
+</div>
+
+<%
+    String error = (String) request.getAttribute("error");
+    if (error != null) {
+%>
+<div class="message-error"><%= error %></div>
+<%
+    }
+%>
+
+<form action="${pageContext.request.contextPath}/editCustomer" method="post">
+    <input type="hidden" name="id" value="<%= customer.getId() %>"><br>
+
+    Name: <input type="text" name="name" value="<%= customer.getName() %>" required><br><br>
+    Phone: <input type="text" name="phone" value="<%= customer.getPhone() %>" required><br><br>
+    NIC No: <input type="text" name="nicNo" value="<%= customer.getNicNo() %>" required><br><br>
+    Address: <input type="text" name="address" value="<%= customer.getAddress() != null ? customer.getAddress() : "" %>"><br><br>
+
+    <input type="submit" value="Update Customer">
 </form>
-<br>
-<a href="customers">Back to List</a>
+
+<a href="${pageContext.request.contextPath}/viewCustomer?phoneNumber=<%= customer.getPhone() %>">← Back to Customer Details</a>
 </body>
 </html>
-
