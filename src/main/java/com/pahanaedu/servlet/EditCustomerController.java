@@ -22,7 +22,13 @@ public class EditCustomerController extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/jsp/viewCustomers.jsp");
             return;
         }
-        int id = Integer.parseInt(idParam);
+        int id;
+        try {
+            id = Integer.parseInt(idParam);
+        } catch (NumberFormatException e) {
+            resp.sendRedirect(req.getContextPath() + "/jsp/viewCustomers.jsp");
+            return;
+        }
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             CustomerService service = new CustomerService(conn);
@@ -46,15 +52,37 @@ public class EditCustomerController extends HttpServlet {
             int id = Integer.parseInt(req.getParameter("id"));
             String name = req.getParameter("name");
             String phone = req.getParameter("phone");
-            String nicNo = req.getParameter("nicNo");  // new NIC No field
+            String nicNo = req.getParameter("nicNo");
             String address = req.getParameter("address");
+
+            boolean hasErrors = false;
+            StringBuilder errorMsg = new StringBuilder();
+
+            // Validate phone: exactly 10 digits (numbers only)
+            if (phone == null || !phone.matches("\\d{10}")) {
+                hasErrors = true;
+                errorMsg.append("Phone must be exactly 10 digits (numbers only).<br>");
+            }
+
+            // Validate NIC: must be exactly 10 or 12 alphanumeric characters
+            if (nicNo == null || !(nicNo.matches("[A-Za-z0-9]{10}") || nicNo.matches("[A-Za-z0-9]{12}"))) {
+                hasErrors = true;
+                errorMsg.append("NIC number must be exactly 10 or 12 characters (letters and/or numbers only).<br>");
+            }
 
             CustomerDTO dto = new CustomerDTO();
             dto.setId(id);
             dto.setName(name);
             dto.setPhone(phone);
-            dto.setNicNo(nicNo);  // set NIC No
+            dto.setNicNo(nicNo);
             dto.setAddress(address);
+
+            if (hasErrors) {
+                req.setAttribute("validationErrors", errorMsg.toString());
+                req.setAttribute("customer", dto);
+                req.getRequestDispatcher("jsp/editCustomer.jsp").forward(req, resp);
+                return;
+            }
 
             try (Connection conn = DBUtil.getInstance().getConnection()) {
                 CustomerService service = new CustomerService(conn);
