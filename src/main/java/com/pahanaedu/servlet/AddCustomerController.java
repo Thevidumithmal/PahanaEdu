@@ -36,29 +36,36 @@ public class AddCustomerController extends HttpServlet {
             errorMsg.append("NIC number must be exactly 10 or 12 characters (letters and/or numbers only).<br>");
         }
 
-
-        if (hasErrors) {
-            req.setAttribute("validationErrors", errorMsg.toString());
-
-            // Repopulate form fields
-            req.setAttribute("name", name);
-            req.setAttribute("phone", phone);
-            req.setAttribute("nicNo", nicNo);
-            req.setAttribute("address", address);
-
-            // Forward back to JSP with errors
-            req.getRequestDispatcher("/jsp/addCustomer.jsp").forward(req, resp);
-            return;
-        }
-
-        CustomerDTO dto = new CustomerDTO();
-        dto.setName(name);
-        dto.setPhone(phone);
-        dto.setNicNo(nicNo);
-        dto.setAddress(address);
-
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             CustomerService service = new CustomerService(conn);
+
+            // Check if phone already exists in DB
+            if (service.getCustomerByPhone(phone) != null) {
+                hasErrors = true;
+                errorMsg.append("This phone number already has a customer.<br>");
+            }
+
+            if (hasErrors) {
+                req.setAttribute("validationErrors", errorMsg.toString());
+
+                // Repopulate form fields
+                req.setAttribute("name", name);
+                req.setAttribute("phone", phone);
+                req.setAttribute("nicNo", nicNo);
+                req.setAttribute("address", address);
+
+                // Forward back to JSP with errors
+                req.getRequestDispatcher("/jsp/addCustomer.jsp").forward(req, resp);
+                return;
+            }
+
+            // No errors, proceed to add customer
+            CustomerDTO dto = new CustomerDTO();
+            dto.setName(name);
+            dto.setPhone(phone);
+            dto.setNicNo(nicNo);
+            dto.setAddress(address);
+
             boolean success = service.addCustomer(dto);
 
             if (success) {
@@ -66,6 +73,7 @@ public class AddCustomerController extends HttpServlet {
             } else {
                 resp.sendRedirect(req.getContextPath() + "/jsp/addCustomer.jsp?error=true");
             }
+
         } catch (Exception e) {
             throw new ServletException("Failed to add customer", e);
         }
