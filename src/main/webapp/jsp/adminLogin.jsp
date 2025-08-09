@@ -102,7 +102,7 @@
 
     <p class="error-message"><%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %></p>
 
-    <a href="login.jsp">← Back to User Selection</a>
+    <a href="${pageContext.request.contextPath}/jsp/login.jsp.jsp">← Back to User Selection</a>
 </div>
 </body>
 </html>
