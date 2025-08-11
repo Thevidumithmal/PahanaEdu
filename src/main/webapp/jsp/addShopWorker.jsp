@@ -100,7 +100,16 @@
     <h2>Welcome, <%= admin.getUsername() %> 👋</h2>
     <h3>Add New Shop Worker</h3>
 
-    <form action="${pageContext.request.contextPath}/addShopWorker" method="post">
+    <form name="workerForm" action="${pageContext.request.contextPath}/addShopWorker" method="post" onsubmit="return validateForm()">
+
+        <label>Name:</label>
+        <input type="text" name="name" required value="${param.name != null ? param.name : ''}">
+        <div style="color:red;">${nameError}</div>
+
+        <label>NIC Number:</label>
+        <input type="text" name="nicNo" required value="${param.nicNo != null ? param.nicNo : ''}">
+        <div id="nicError" style="color:red;">${nicError}</div>
+
         <label>Username:</label>
         <input type="text" name="username" required>
 
@@ -108,7 +117,8 @@
         <input type="password" name="password" required>
 
         <label>Phone:</label>
-        <input type="text" name="phone">
+        <input type="text" name="phone" required value="${param.phone != null ? param.phone : ''}">
+        <div id="phoneError" style="color:red;">${phoneError}</div>
 
         <label>Address:</label>
         <input type="text" name="address">
@@ -122,4 +132,33 @@
     <a class="back-link" href="${pageContext.request.contextPath}/jsp/adminDashboard.jsp">← Back to Dashboard</a>
 </div>
 </body>
+<script>
+    function validateForm() {
+        const nic = document.forms["workerForm"]["nicNo"].value.trim();
+        const phone = document.forms["workerForm"]["phone"].value.trim();
+
+        const nic10Pattern = /^\d{9}[vVxX]$/;
+        const nic12Pattern = /^\d{12}$/;
+
+        const phonePattern = /^\d{10}$/;
+
+        let valid = true;
+        let nicError = "";
+        let phoneError = "";
+
+        if (!(nic10Pattern.test(nic) || nic12Pattern.test(nic))) {
+            nicError = "NIC must be 10 chars (9 digits + letter) or 12 digits.";
+            valid = false;
+        }
+        if (!phonePattern.test(phone)) {
+            phoneError = "Phone number must be exactly 10 digits.";
+            valid = false;
+        }
+
+        document.getElementById("nicError").innerText = nicError;
+        document.getElementById("phoneError").innerText = phoneError;
+
+        return valid;
+    }
+</script>
 </html>
