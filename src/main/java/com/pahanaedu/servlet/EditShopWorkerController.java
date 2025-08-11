@@ -71,7 +71,6 @@ public class EditShopWorkerController extends HttpServlet {
         }
 
         if (hasErrors) {
-            // Pass input values back to JSP to prefill
             req.setAttribute("userInput", req.getParameterMap());
             req.getRequestDispatcher("jsp/editShopWorker.jsp").forward(req, resp);
             return;
@@ -79,6 +78,27 @@ public class EditShopWorkerController extends HttpServlet {
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             UserService userService = new UserService(conn);
+
+            // Check for duplicates excluding current user id
+            boolean phoneExists = userService.isPhoneExistsForOtherUser(phone, id);
+            boolean nicExists = userService.isNicNoExistsForOtherUser(nicNo, id);
+
+            boolean hasDbErrors = false;
+
+            if (phoneExists) {
+                req.setAttribute("phoneError", "Phone number already exists.");
+                hasDbErrors = true;
+            }
+            if (nicExists) {
+                req.setAttribute("nicError", "NIC number already exists.");
+                hasDbErrors = true;
+            }
+
+            if (hasDbErrors) {
+                req.setAttribute("userInput", req.getParameterMap());
+                req.getRequestDispatcher("jsp/editShopWorker.jsp").forward(req, resp);
+                return;
+            }
 
             User user = new User.Builder()
                     .setId(id)

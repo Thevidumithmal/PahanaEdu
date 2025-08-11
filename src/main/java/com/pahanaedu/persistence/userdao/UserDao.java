@@ -131,6 +131,64 @@ public class UserDao {
         }
     }
 
+    // In UserDao.java
+    public boolean isPhoneExists(String phone) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM users WHERE phone = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, phone);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isNicNoExists(String nicNo) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM users WHERE nic_no = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, nicNo);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public boolean isPhoneExistsForOtherUser(String phone, int excludeUserId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM users WHERE phone = ? AND id != ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, phone);
+            stmt.setInt(2, excludeUserId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isNicNoExistsForOtherUser(String nicNo, int excludeUserId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM users WHERE nic_no = ? AND id != ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, nicNo);
+            stmt.setInt(2, excludeUserId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
 
 }
 

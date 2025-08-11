@@ -68,14 +68,13 @@ public class AddShopWorkerController extends HttpServlet {
             hasErrors = true;
         }
 
-        // If any error, forward back to form with messages and pre-fill values
+        // If any client-side validation errors, forward back with errors
         if (hasErrors) {
             req.setAttribute("userInput", req.getParameterMap());
             req.getRequestDispatcher("jsp/addShopWorker.jsp").forward(req, resp);
             return;
         }
 
-        // No errors, proceed as before
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername(username);
         userDTO.setPassword(password);
@@ -87,6 +86,28 @@ public class AddShopWorkerController extends HttpServlet {
 
         try (Connection connection = DBUtil.getInstance().getConnection()) {
             UserService userService = new UserService(connection);
+
+            // Check if phone or NIC already exists
+            boolean phoneExists = userService.isPhoneExists(phone);
+            boolean nicExists = userService.isNicNoExists(nicNo);
+
+            boolean hasDbErrors = false;
+
+            if (phoneExists) {
+                req.setAttribute("phoneError", "Phone number already exists.");
+                hasDbErrors = true;
+            }
+            if (nicExists) {
+                req.setAttribute("nicError", "NIC number already exists.");
+                hasDbErrors = true;
+            }
+
+            if (hasDbErrors) {
+                req.setAttribute("userInput", req.getParameterMap());
+                req.getRequestDispatcher("jsp/addShopWorker.jsp").forward(req, resp);
+                return;
+            }
+
             User user = UserMapper.toEntity(userDTO);
             boolean success = userService.addUser(user);
 
@@ -102,5 +123,4 @@ public class AddShopWorkerController extends HttpServlet {
             throw new ServletException("Error adding shop worker", e);
         }
     }
-
 }
