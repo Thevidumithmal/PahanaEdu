@@ -7,7 +7,12 @@ public class ItemMapper {
 
     public static ItemDTO toDTO(Item item) {
         if (item == null) return null;
-        return new ItemDTO(item.getId(), item.getName(), item.getPrice());
+        return new ItemDTO(
+                item.getId(),
+                item.getName(),
+                item.getPrice(),
+                item.getCategoryId()
+        );
     }
 
     public static Item toModel(ItemDTO dto) {
@@ -16,6 +21,7 @@ public class ItemMapper {
         item.setId(dto.getId());
         item.setName(dto.getName());
         item.setPrice(dto.getPrice());
+        item.setCategoryId(dto.getCategoryId());
         return item;
     }
 }

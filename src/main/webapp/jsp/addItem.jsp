@@ -1,11 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.pahanaedu.business.user.dto.UserDTO" %>
+<%@ page import="com.pahanaedu.business.category.dto.CategoryDTO" %>
+<%@ page import="java.util.List" %>
 <%
     UserDTO admin = (UserDTO) session.getAttribute("admin");
     if (admin == null) {
         response.sendRedirect("adminLogin.jsp");
         return;
     }
+    List<CategoryDTO> categories = (List<CategoryDTO>) request.getAttribute("categories");
 %>
 <!DOCTYPE html>
 <html>
@@ -68,6 +71,24 @@
             background-color: #e68900;
         }
 
+        select {
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            background-color: #fff;
+            appearance: none; /* removes default arrow in some browsers */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #f57c00;
+            box-shadow: 0 0 5px rgba(245, 124, 0, 0.5);
+        }
+
         .message-success {
             margin-top: 20px;
             color: green;
@@ -104,6 +125,20 @@
 
         <label>Price:</label>
         <input type="number" step="0.01" name="price" required>
+
+        <label>Category:</label>
+        <select name="categoryId" required>
+            <option value="">-- Select Category --</option>
+            <%
+                if (categories != null) {
+                    for (CategoryDTO category : categories) {
+            %>
+            <option value="<%= category.getId() %>"><%= category.getName() %></option>
+            <%
+                    }
+                }
+            %>
+        </select>
 
         <input type="submit" value="Add Item">
     </form>

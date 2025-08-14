@@ -1,11 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.pahanaedu.business.item.dto.ItemDTO" %>
+<%@ page import="com.pahanaedu.business.category.dto.CategoryDTO" %>
+<%@ page import="java.util.List" %>
 <%
     ItemDTO item = (ItemDTO) request.getAttribute("item");
     if (item == null) {
         response.sendRedirect("viewItems");
         return;
     }
+    List<CategoryDTO> categories = (List<CategoryDTO>) request.getAttribute("categories");
+
 %>
 <!DOCTYPE html>
 <html>
@@ -68,6 +72,24 @@
             background-color: #e65100;
         }
 
+        select {
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            background-color: #fff;
+            appearance: none; /* removes default arrow in some browsers */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #f57c00;
+            box-shadow: 0 0 5px rgba(245, 124, 0, 0.5);
+        }
+
         .back-link {
             display: block;
             margin-top: 25px;
@@ -93,6 +115,21 @@
 
         <label>Price:</label>
         <input type="number" step="0.01" name="price" value="<%= item.getPrice() %>" required>
+
+        <label>Category:</label>
+        <select name="categoryId" required>
+            <option value="">-- Select Category --</option>
+            <%
+                if (categories != null) {
+                    for (CategoryDTO category : categories) {
+                        String selected = category.getId() == item.getCategoryId() ? "selected" : "";
+            %>
+            <option value="<%= category.getId() %>" <%= selected %>><%= category.getName() %></option>
+            <%
+                    }
+                }
+            %>
+        </select>
 
         <input type="submit" value="Update Item">
     </form>

@@ -29,6 +29,13 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
+    public List<ItemDTO> getItemsByCategory(int categoryId) throws SQLException {
+        List<Item> items = itemDao.getItemsByCategory(categoryId);
+        return items.stream()
+                .map(ItemMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public ItemDTO getItemById(int id) throws SQLException {
         Item item = itemDao.getItemById(id);
         return ItemMapper.toDTO(item);
@@ -42,4 +49,9 @@ public class ItemService {
     public boolean deleteItem(int id) throws SQLException {
         return itemDao.deleteItem(id);
     }
+
+    public boolean isNameExists(String name) throws SQLException {
+        return itemDao.isNameExists(name);
+    }
+
 }
