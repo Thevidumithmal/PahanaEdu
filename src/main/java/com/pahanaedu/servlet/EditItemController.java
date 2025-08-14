@@ -2,15 +2,17 @@ package com.pahanaedu.servlet;
 
 import com.pahanaedu.business.item.dto.ItemDTO;
 import com.pahanaedu.business.item.service.ItemService;
+import com.pahanaedu.business.category.dto.CategoryDTO;
+import com.pahanaedu.business.category.service.CategoryService;
 import com.pahanaedu.util.DBUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.List;
 
 @WebServlet("/editItem")
 public class EditItemController extends HttpServlet {
@@ -24,7 +26,11 @@ public class EditItemController extends HttpServlet {
             ItemService itemService = new ItemService(conn);
             ItemDTO itemDTO = itemService.getItemById(id);
 
+            CategoryService categoryService = new CategoryService(conn);
+            List<CategoryDTO> categories = categoryService.getAllCategories();
+
             req.setAttribute("item", itemDTO);
+            req.setAttribute("categories", categories);
             req.getRequestDispatcher("jsp/editItem.jsp").forward(req, resp);
 
         } catch (Exception e) {
@@ -39,11 +45,13 @@ public class EditItemController extends HttpServlet {
         int id = Integer.parseInt(req.getParameter("id"));
         String name = req.getParameter("name");
         BigDecimal price = new BigDecimal(req.getParameter("price"));
+        int categoryId = Integer.parseInt(req.getParameter("categoryId"));
 
         ItemDTO itemDTO = new ItemDTO();
         itemDTO.setId(id);
         itemDTO.setName(name);
         itemDTO.setPrice(price);
+        itemDTO.setCategoryId(categoryId);
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
             ItemService itemService = new ItemService(conn);
@@ -53,6 +61,11 @@ public class EditItemController extends HttpServlet {
                 resp.sendRedirect("viewItems");
             } else {
                 req.setAttribute("error", "Failed to update item.");
+
+                // reload categories for dropdown
+                CategoryService categoryService = new CategoryService(conn);
+                req.setAttribute("categories", categoryService.getAllCategories());
+
                 req.getRequestDispatcher("jsp/editItem.jsp").forward(req, resp);
             }
 

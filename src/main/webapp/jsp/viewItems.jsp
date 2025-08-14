@@ -2,6 +2,7 @@
 <%@ page import="com.pahanaedu.business.user.dto.UserDTO" %>
 <%@ page import="com.pahanaedu.business.item.dto.ItemDTO" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.pahanaedu.business.category.dto.CategoryDTO" %>
 <%
   UserDTO admin = (UserDTO) session.getAttribute("admin");
   if (admin == null) {
@@ -10,6 +11,8 @@
   }
 
   List<ItemDTO> items = (List<ItemDTO>) request.getAttribute("items");
+  List<CategoryDTO> categories = (List<CategoryDTO>) request.getAttribute("categories");
+  String selectedCategoryId = request.getParameter("categoryId") != null ? request.getParameter("categoryId") : "";
 %>
 <!DOCTYPE html>
 <html>
@@ -89,6 +92,23 @@
 <body>
 <div class="container">
   <h2>Item List</h2>
+  <!-- Category Filter -->
+  <form action="${pageContext.request.contextPath}/viewItems" method="get" class="mb-3 d-flex gap-2">
+    <select name="categoryId" class="form-select w-25">
+      <option value="">All Items</option>
+      <%
+        if (categories != null) {
+          for (CategoryDTO cat : categories) {
+            String selected = String.valueOf(cat.getId()).equals(selectedCategoryId) ? "selected" : "";
+      %>
+      <option value="<%= cat.getId() %>" <%= selected %>><%= cat.getName() %></option>
+      <%
+          }
+        }
+      %>
+    </select>
+    <button type="submit" class="btn btn-primary">Filter</button>
+  </form>
 
   <!-- Search Field -->
   <div class="mb-2">

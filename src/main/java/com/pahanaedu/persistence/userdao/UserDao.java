@@ -40,13 +40,15 @@ public class UserDao {
     }
 
     public boolean addUser(User user) throws SQLException {
-        String sql = "INSERT INTO users (username, password, role, phone, address) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, password, role, phone, address, name, nic_no) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getRole());
             stmt.setString(4, user.getPhone());
             stmt.setString(5, user.getAddress());
+            stmt.setString(6, user.getName());
+            stmt.setString(7, user.getNicNo());
             return stmt.executeUpdate() > 0;
         }
     }
@@ -63,6 +65,8 @@ public class UserDao {
                             .setUsername(rs.getString("username"))
                             .setPhone(rs.getString("phone"))
                             .setAddress(rs.getString("address"))
+                            .setName(rs.getString("name"))
+                            .setNicNo(rs.getString("nic_no"))
                             .build();
 
 
@@ -84,6 +88,8 @@ public class UserDao {
                             .setUsername(rs.getString("username"))
                             .setPhone(rs.getString("phone"))
                             .setAddress(rs.getString("address"))
+                            .setName(rs.getString("name"))
+                            .setNicNo(rs.getString("nic_no"))
                             .build();
 ;
                     return user;
@@ -94,12 +100,14 @@ public class UserDao {
     }
 
     public boolean updateUser(User user) throws SQLException {
-        String sql = "UPDATE users SET username = ?, phone = ?, address = ? WHERE id = ?";
+        String sql = "UPDATE users SET username = ?, phone = ?, address = ?, name = ?, nic_no = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPhone());
             stmt.setString(3, user.getAddress());
-            stmt.setInt(4, user.getId());
+            stmt.setString(4, user.getName());        // new
+            stmt.setString(5, user.getNicNo());
+            stmt.setInt(6, user.getId());
             return stmt.executeUpdate() > 0;
         }
     }
@@ -122,6 +130,64 @@ public class UserDao {
             return stmt.executeUpdate() > 0;
         }
     }
+
+    // In UserDao.java
+    public boolean isPhoneExists(String phone) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM users WHERE phone = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, phone);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isNicNoExists(String nicNo) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM users WHERE nic_no = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, nicNo);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public boolean isPhoneExistsForOtherUser(String phone, int excludeUserId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM users WHERE phone = ? AND id != ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, phone);
+            stmt.setInt(2, excludeUserId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isNicNoExistsForOtherUser(String nicNo, int excludeUserId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM users WHERE nic_no = ? AND id != ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, nicNo);
+            stmt.setInt(2, excludeUserId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+
 
 
 }
