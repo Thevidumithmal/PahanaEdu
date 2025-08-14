@@ -14,6 +14,8 @@ public class UserMapper {
         dto.setRole(user.getRole());
         dto.setPhone(user.getPhone());
         dto.setAddress(user.getAddress());
+        dto.setName(user.getName());
+        dto.setNicNo(user.getNicNo());
         return dto;
     }
 
@@ -26,6 +28,8 @@ public class UserMapper {
                 .setRole(dto.getRole())
                 .setPhone(dto.getPhone())
                 .setAddress(dto.getAddress())
+                .setName(dto.getName())
+                .setNicNo(dto.getNicNo())
                 .build();
     }
 }

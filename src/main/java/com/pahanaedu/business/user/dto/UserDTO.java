@@ -7,6 +7,8 @@ public class UserDTO {
     private String role;
     private String phone;
     private String address;
+    private String name;       // new
+    private String nicNo;      // new
 
     public UserDTO() {}
 
@@ -27,4 +29,10 @@ public class UserDTO {
 
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getNicNo() { return nicNo; }
+    public void setNicNo(String nicNo) { this.nicNo = nicNo; }
 }

@@ -43,6 +43,23 @@ public class UserService {
         return userDao.resetPassword(username, phone, newPassword);
     }
 
+    public boolean isPhoneExists(String phone) throws SQLException {
+        return userDao.isPhoneExists(phone);
+    }
+
+    public boolean isNicNoExists(String nicNo) throws SQLException {
+        return userDao.isNicNoExists(nicNo);
+    }
+
+    public boolean isPhoneExistsForOtherUser(String phone, int excludeUserId) throws SQLException {
+        return userDao.isPhoneExistsForOtherUser(phone, excludeUserId);
+    }
+
+    public boolean isNicNoExistsForOtherUser(String nicNo, int excludeUserId) throws SQLException {
+        return userDao.isNicNoExistsForOtherUser(nicNo, excludeUserId);
+    }
+
+
 
 
 }

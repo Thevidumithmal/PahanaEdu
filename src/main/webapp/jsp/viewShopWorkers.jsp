@@ -138,6 +138,8 @@
     <thead>
     <tr>
       <th>ID</th>
+      <th>Name</th>
+      <th>NIC No</th>
       <th>Username</th>
       <th>Phone</th>
       <th>Address</th>
@@ -151,6 +153,8 @@
     %>
     <tr>
       <td><%= u.getId() %></td>
+      <td><%= u.getName() %></td>
+      <td><%= u.getNicNo() %></td>
       <td><%= u.getUsername() %></td>
       <td><%= u.getPhone() %></td>
       <td><%= u.getAddress() %></td>

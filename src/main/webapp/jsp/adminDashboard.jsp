@@ -95,9 +95,17 @@
 
   <h3>Manage Items</h3>
   <ul>
-    <li><a class="button" href="addItem.jsp">➕ Add New Item</a></li>
+    <li><a class="button" href="${pageContext.request.contextPath}/addItem">➕ Add New Item</a></li>
+
     <li><a class="button" href="${pageContext.request.contextPath}/viewItems">📋 View / Edit / Delete Items</a></li>
   </ul>
+
+  <h3>Manage Categories</h3>
+  <ul>
+    <li><a class="button" href="addCategory.jsp">➕ Add New Category</a></li>
+    <li><a class="button" href="${pageContext.request.contextPath}/viewCategories">📋 View / Delete Categories</a></li>
+  </ul>
+
 
   <form action="logout.jsp" method="post">
     <input type="submit" class="logout-button" value="🚪 Logout">
