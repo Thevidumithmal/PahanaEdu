@@ -210,6 +210,7 @@
       <th>Name</th>
       <th>Phone</th>
       <th>NIC No</th>
+      <th>Email</th>
       <th>Address</th>
       <th>Actions</th>
     </tr>
@@ -221,6 +222,7 @@
       <td><%= customer.getName() %></td>
       <td><%= customer.getPhone() %></td>
       <td><%= customer.getNicNo() %></td>
+      <td><%= customer.getEmail() != null ? customer.getEmail() : "-" %></td>
       <td><%= customer.getAddress() %></td>
       <td>
         <a href="${pageContext.request.contextPath}/editCustomer?id=<%= customer.getId() %>" class="edit-link">
