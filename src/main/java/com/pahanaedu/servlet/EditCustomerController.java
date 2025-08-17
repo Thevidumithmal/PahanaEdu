@@ -54,6 +54,7 @@ public class EditCustomerController extends HttpServlet {
             String phone = req.getParameter("phone");
             String nicNo = req.getParameter("nicNo");
             String address = req.getParameter("address");
+            String email = req.getParameter("email");
 
             boolean hasErrors = false;
             StringBuilder errorMsg = new StringBuilder();
@@ -70,11 +71,17 @@ public class EditCustomerController extends HttpServlet {
                 errorMsg.append("NIC number must be exactly 10 or 12 characters (letters and/or numbers only).<br>");
             }
 
+            if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                hasErrors = true;
+                errorMsg.append("Invalid email format.<br>");
+            }
+
             CustomerDTO dto = new CustomerDTO();
             dto.setId(id);
             dto.setName(name);
             dto.setPhone(phone);
             dto.setNicNo(nicNo);
+            dto.setEmail(email);
             dto.setAddress(address);
 
             if (hasErrors) {

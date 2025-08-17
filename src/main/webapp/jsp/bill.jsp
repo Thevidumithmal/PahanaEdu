@@ -75,6 +75,7 @@
     <p class="mb-1">📞 <strong>Phone:</strong> <%= customer.getPhone() %></p>
     <p class="mb-1">🏠 <strong>Address:</strong> <%= customer.getAddress() %></p>
     <p class="mb-0">🆔 <strong>NIC No:</strong> <%= customer.getNicNo() %></p>
+    <p class="mb-0">📧 <strong>Email:</strong> <%= customer.getEmail() %></p>
   </div>
 
   <!-- Step 2: Select Items & Quantity -->

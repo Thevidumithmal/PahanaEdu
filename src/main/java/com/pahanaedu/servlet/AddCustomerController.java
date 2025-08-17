@@ -20,6 +20,7 @@ public class AddCustomerController extends HttpServlet {
         String phone = req.getParameter("phone");
         String nicNo = req.getParameter("nicNo");
         String address = req.getParameter("address");
+        String email = req.getParameter("email"); // new email field
 
         boolean hasErrors = false;
         StringBuilder errorMsg = new StringBuilder();
@@ -34,6 +35,12 @@ public class AddCustomerController extends HttpServlet {
         if (nicNo == null || !(nicNo.matches("[A-Za-z0-9]{10}") || nicNo.matches("[A-Za-z0-9]{12}"))) {
             hasErrors = true;
             errorMsg.append("NIC number must be exactly 10 or 12 characters (letters and/or numbers only).<br>");
+        }
+
+        // Validate email: basic email format
+        if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            hasErrors = true;
+            errorMsg.append("Invalid email address.<br>");
         }
 
         try (Connection conn = DBUtil.getInstance().getConnection()) {
@@ -53,6 +60,7 @@ public class AddCustomerController extends HttpServlet {
                 req.setAttribute("phone", phone);
                 req.setAttribute("nicNo", nicNo);
                 req.setAttribute("address", address);
+                req.setAttribute("email", email);
 
                 // Forward back to JSP with errors
                 req.getRequestDispatcher("/jsp/addCustomer.jsp").forward(req, resp);
@@ -65,6 +73,7 @@ public class AddCustomerController extends HttpServlet {
             dto.setPhone(phone);
             dto.setNicNo(nicNo);
             dto.setAddress(address);
+            dto.setEmail(email); // set email
 
             boolean success = service.addCustomer(dto);
 
