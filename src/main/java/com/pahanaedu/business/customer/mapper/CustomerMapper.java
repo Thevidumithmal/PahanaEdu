@@ -12,7 +12,8 @@ public class CustomerMapper {
         dto.setName(customer.getName());
         dto.setPhone(customer.getPhone());
         dto.setAddress(customer.getAddress());
-        dto.setNicNo(customer.getNicNo());  // NEW FIELD
+        dto.setNicNo(customer.getNicNo());
+        dto.setEmail(customer.getEmail());;
         return dto;
     }
 
@@ -23,7 +24,8 @@ public class CustomerMapper {
         customer.setName(dto.getName());
         customer.setPhone(dto.getPhone());
         customer.setAddress(dto.getAddress());
-        customer.setNicNo(dto.getNicNo());  // NEW FIELD
+        customer.setNicNo(dto.getNicNo());
+        customer.setEmail(dto.getEmail());
         return customer;
     }
 }

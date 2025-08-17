@@ -113,6 +113,11 @@
         </div>
 
         <div class="mb-3">
+            <label for="email" class="form-label"><i class="fa-solid fa-envelope me-1"></i>Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="<%= customer.getEmail() != null ? customer.getEmail() : "" %>" required>
+        </div>
+
+        <div class="mb-3">
             <label for="nicNo" class="form-label"><i class="fa-solid fa-id-card me-1"></i>NIC No</label>
             <input type="text" class="form-control" id="nicNo" name="nicNo" value="<%= customer.getNicNo() %>" required>
         </div>

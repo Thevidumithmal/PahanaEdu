@@ -5,7 +5,8 @@ public class CustomerDTO {
     private String name;
     private String phone;
     private String address;
-    private String nicNo;  // NEW FIELD
+    private String nicNo;
+    private String email;
 
     // Getters and setters
 
@@ -48,5 +49,13 @@ public class CustomerDTO {
 
     public void setNicNo(String nicNo) {
         this.nicNo = nicNo;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

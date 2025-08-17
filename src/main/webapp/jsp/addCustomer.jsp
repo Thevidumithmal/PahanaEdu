@@ -161,6 +161,11 @@
             <input type="text" name="address" class="form-control"
                    value="<%= request.getAttribute("address") != null ? request.getAttribute("address") : "" %>">
           </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required
+                   value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>">
+          </div>
 
           <div class="d-grid">
             <button type="submit" class="btn btn-custom">
@@ -168,6 +173,7 @@
             </button>
           </div>
         </form>
+
 
         <div class="text-center mt-4">
           <a href="${pageContext.request.contextPath}/jsp/shopDashboard.jsp" class="back-link">
