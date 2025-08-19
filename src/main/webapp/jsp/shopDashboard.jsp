@@ -24,7 +24,7 @@
       flex-direction: column;
       align-items: center;
       color: #2c3e50;
-      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background: url('${pageContext.request.contextPath}/image/shopdashboard.jpg') no-repeat center center fixed;
       background-size: cover;
       position: relative;
     }

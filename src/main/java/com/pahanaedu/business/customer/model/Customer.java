@@ -7,8 +7,10 @@ public class Customer {
     private String address;
     private String nicNo;
     private String email;
-    // Getters and setters
 
+
+
+    // Getters and setters
 
     public int getId() {
         return id;
