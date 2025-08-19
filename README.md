@@ -70,7 +70,7 @@ Open IntelliJ → configure Tomcat → run project → go to http://localhost:80
 
 Default Credentials
 
-Admin: admin / admin123
+Admin: admin / admin
 
 
 
